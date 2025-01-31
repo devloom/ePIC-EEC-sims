@@ -13,9 +13,14 @@ namespace HistoManager {
     histograms["deltaR_vs_weight"] = new TH2D("deltaR_vs_weight", "DeltaR vs Weight", 100, 0, 1, 100, 0, 0.25);
    
     for (size_t i = 0; i < ptBinEdges.size() - 1; ++i) {
+
       std::ostringstream histName;
       histName << "eec_pt_bin_" << ptBinEdges[i] << "_" << ptBinEdges[i + 1];
       histograms[histName.str()] = new TH1D(histName.str().c_str(), histName.str().c_str(), 100, 0, 1);
+
+      std::ostringstream histName_E3C;
+      histName_E3C << "E3C_pt_bin" << ptBinEdges[i] << "_" << ptBinEdges[i + 1];
+      histograms[histName_E3C.str()] = new TH1D(histName_E3C.str().c_str(), histName_E3C.str().c_str(), 100, 0, 1);
     }
   }
 

@@ -9,7 +9,7 @@ void run_eec()
     // ========== For now just read in the vector branches and we will manually make the jet objects ========== //
     // read pythia jets from file
     // std::string inputPythia = "pythia8_inclusivejets.root";
-    std::string inputPythia = "../../rootfiles/truth_jets.root";
+    std::string inputPythia = "../../simulations/truth_jets.root";
     TFile *infilePythia = new TFile(inputPythia.c_str());
     if (!infilePythia || infilePythia->IsZombie()){std::cerr << "Could not open file." << std::endl;return;}
 

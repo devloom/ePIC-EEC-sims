@@ -15,6 +15,7 @@ void EnergyCorrelator::FillHistograms() const
   // jet energy
   float jetE = jet.get4vec().E();
   float jetE2 = jetE*jetE;
+  float jetE3 = jetE*jetE*jetE;
 
   // jet pt
   float jetPt = jet.get4vec().Pt();
@@ -24,6 +25,30 @@ void EnergyCorrelator::FillHistograms() const
   {
     for (size_t j = i+1; j < constituents.size(); ++j)
     {
+
+      for (size_t k = j+1; k < constituents.size(); ++k)
+      {
+        float deltaR_E3C_ij = ROOT::Math::VectorUtil::DeltaR(constituents[i].get4vec(), constituents[j].get4vec());
+        float deltaR_E3C_jk = ROOT::Math::VectorUtil::DeltaR(constituents[j].get4vec(), constituents[k].get4vec());
+        float deltaR_E3C_ik = ROOT::Math::VectorUtil::DeltaR(constituents[i].get4vec(), constituents[k].get4vec());
+        
+        float deltaR_E3C=std::max({deltaR_E3C_ij,deltaR_E3C_jk,deltaR_E3C_ik});
+        
+        float weight_E3C = (constituents[i].get4vec().E()*constituents[j].get4vec().E()*constituents[k].get4vec().E())/jetE3;
+
+        
+        if (ptBinIndex >= 0) 
+        {
+          std::ostringstream key_E3C;
+          key_E3C << "E3C_pt_bin" << HistoManager::ptBinEdges[ptBinIndex] << "_" << HistoManager::ptBinEdges[ptBinIndex + 1];
+          if (HistoManager::histograms.count(key_E3C.str())) 
+          {
+            ((TH1D*)HistoManager::histograms[key_E3C.str()])->Fill(deltaR_E3C, weight_E3C);
+            }
+          }
+      
+      }
+      
       float deltaR = ROOT::Math::VectorUtil::DeltaR(constituents[i].get4vec(), constituents[j].get4vec());
       float weight = (constituents[i].get4vec().E()*constituents[j].get4vec().E())/jetE2;
 
@@ -46,8 +71,8 @@ void EnergyCorrelator::FillHistograms() const
         if (HistoManager::histograms.count(key.str())) 
         {
           ((TH1D*)HistoManager::histograms[key.str()])->Fill(deltaR, weight);
+          }
         }
-      }
     }
   }
 }
