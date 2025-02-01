@@ -1,0 +1,12 @@
+*.o
+*.so
+*.out
+*.a
+*.d
+*.lo
+
+*.pcm
+*.cxx
+*.root
+
+.vscode/
