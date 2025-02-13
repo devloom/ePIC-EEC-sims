@@ -14,7 +14,7 @@ void EnergyCorrelator::FillHistograms() const
 
   // jet energy
   float jetE = jet.get4vec().E();
-  if ()jetE==0) return;
+  if (jetE==0) return;
   float jetE2 = jetE*jetE;
   float jetE3 = jetE*jetE*jetE;
 
