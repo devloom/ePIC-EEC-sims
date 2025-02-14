@@ -18,6 +18,8 @@ void EnergyCorrelator::FillHistograms() const
   float jetE2 = jetE*jetE;
   float jetE3 = jetE*jetE*jetE;
 
+  if (jetE <= 0){return;}
+
   // jet pt
   float jetPt = jet.get4vec().Pt();
   int ptBinIndex = HistoManager::GetPtBinIndex(jetPt);
@@ -26,7 +28,7 @@ void EnergyCorrelator::FillHistograms() const
   {
     for (size_t j = i+1; j < constituents.size(); ++j)
     {
-
+      
       for (size_t k = j+1; k < constituents.size(); ++k)
       {
         float deltaR_E3C_ij = ROOT::Math::VectorUtil::DeltaR(constituents[i].get4vec(), constituents[j].get4vec());

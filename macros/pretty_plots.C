@@ -7,9 +7,6 @@ void pretty_plots()
 {
     TFile *file_truth = TFile::Open("test_outfile_truth.root", "READ");
     TFile *file_smeared = TFile::Open("test_outfile_smeared.root", "READ");
-    
-    TH1F *jPt_truth = (TH1F*)file_truth->Get("jetPt");
-    TH1F *jPt_smeared = (TH1F*)file_smeared->Get("jetPt");
    
 
 	TCanvas* c1 = new TCanvas("c1", "Histogram Canvas", 1600, 1000); // 800 and 600 tell the program the size of the histogram
@@ -20,30 +17,33 @@ void pretty_plots()
 	int bins_high=10; 
 	double binwidth_low=(xmax-xmin)/bins_low;
 	double binwidth_high=(xmax-xmin)/bins_high;
+
     int pTarray[7]={5,10,15,20,25,30,35};
+	
 
-    double jetCounts_truth[7] = {0}, jetCounts_smeared[7] = {0};
-
-    for (int i = 0; i < 6; ++i) {  
-		int low=jPt_truth->FindBin(pTarray[i]);
-		int high=jPt_truth->FindBin(pTarray[i+1])-1;
-
-		for (int j=low; j<= high; ++j)
-			{jetCounts_truth[i]+=jPt_truth->GetBinContent(j);}}
-				
-
-	for (int i = 0; i < 6; ++i) {  
-		int low=jPt_smeared->FindBin(pTarray[i]);
-		int high=jPt_smeared->FindBin(pTarray[i+1])-1;
-
-		for (int j=low; j<= high; ++j)
-			{jetCounts_smeared[i]+=jPt_smeared->GetBinContent(j);}}
+    TTree *jetCountTree_truth = nullptr;
+    TTree *jetCountTree_smeared = nullptr;
+	file_smeared->GetObject("jetCountTree_smeared", jetCountTree_smeared);
+    file_truth->GetObject("jetCountTree_truth", jetCountTree_truth);
 
 	
-		
+    if (!jetCountTree_smeared) {																					//get jet counts for scaling
+        std::cerr << "Error: `jetCountTree_smeared` not found in `test_outfile_smeared.root`" << std::endl;
+        return;
+    }
+	if (!jetCountTree_truth) {
+        std::cerr << "Error: `jetCountTree_truth` not found in `test_outfile_truth.root`" << std::endl;
+        return;
+    }
+	double jetCounts_truth[7] = {0};
+	double jetCounts_smeared[7] = {0};
+	jetCountTree_truth->SetBranchAddress("jetCounts_truth", jetCounts_truth);
+    jetCountTree_smeared->SetBranchAddress("jetCounts_smeared", jetCounts_smeared);
+    jetCountTree_truth->GetEntry(0);
+    jetCountTree_smeared->GetEntry(0);
 
-
-
+  
+	
     std::vector<TH1F*> EEC_hist_smeared(6), EEC_hist_truth(6);
 
     for (int i = 0; i < 6; ++i) {                                      //get the histogram from root outfile
@@ -53,15 +53,11 @@ void pretty_plots()
         EEC_hist_smeared[i] = (TH1F*)file_smeared->Get(hist_name_smeared.c_str());
         EEC_hist_truth[i] = (TH1F*)file_truth->Get(hist_name_truth.c_str());
 
-        if (!EEC_hist_smeared[i] || !EEC_hist_truth[i]) {
-            std::cerr << "Error: Missing EEC histogram for bin " << i << std::endl;
-            return;
-        }
+    
     }
 
 
-
-	for (int i=0; i<6; ++i){
+	for (int i=0; i<6; ++i){			//drawing histograms
 		c1->cd(i+1);
 		gPad->SetLeftMargin(0.15);
 		double binwidth;
@@ -69,6 +65,7 @@ void pretty_plots()
 		if (i>3){binwidth=binwidth_high;}
         EEC_hist_smeared[i]->Scale(1. / (jetCounts_smeared[i]*binwidth));
 		EEC_hist_truth[i]->Scale(1. / (jetCounts_truth[i]*binwidth));
+		std::cout<<jetCounts_truth[i]<<std::endl;
 
 
 

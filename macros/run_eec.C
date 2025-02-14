@@ -33,23 +33,36 @@ void run_eec()
 
     // Create histograms
     std::vector<float> ptbins = {5,10,15,20,25,30,35,40};
+    double jetCounts_smeared[7] = {0};
+    TFile *outfile = new TFile("test_outfile_smeared.root","RECREATE");
+
+    TTree *jetCountTree_smeared = new TTree("jetCountTree_smeared","a tree with jet counts");           //creating an extra tree for jetcounts for scaling
+    jetCountTree_smeared->Branch("jetCounts_smeared", jetCounts_smeared, "jetCounts_smeared[7]/D");
+
     HistoManager::InitializeHistograms(ptbins);
-    TH1F *jetPt = new TH1F("jetPt", "Jet pT Distribution; pT (GeV); Number of Jets", 40, 0, 200);  // 40 bins, 0 to 200 GeV
+
 
     for (int i = 0; i < jettree->GetEntries(); ++i)
-    //for (int i = 0; i < jettree->GetEntries(); ++i)
-    {
-      if (i % 100000 == 0){std::cout << "Processed " << i << " jets." << std::endl;}
-      jettree->GetEntry(i);
+      {jettree->GetEntry(i);
       
-      int count=0;
-      for (int i = 0; i < nConstituents; i++)
-						{if (dtr_PID->at(i) == 0) {
+      if (i % 100000 == 0){std::cout << "Processed " << i << " jets."  << std::endl;}
+      
+      if (nConstituents < 3){continue;}    
+      int count=0;                                      //exclusions and cut
+      for (int j = 0; j < nConstituents; j++)
+						{if (dtr_PID->at(j) == 0) {
 							count++;}}
 					if (count==nConstituents)
 						{continue;}
-      //std::cout << nConstituents << std::endl;
-      jetPt->Fill(jPt);  //store jPt for jet count for scaling
+
+            
+      for (int k = 0; k < 7; ++k) {
+            if (jPt > ptbins[k] && jPt < ptbins[k + 1]) {
+                jetCounts_smeared[k]++;  
+
+            }
+        }
+            
 
       Jet *jet = new Jet();
       for (int j = 0; j < nConstituents; j++)
@@ -61,14 +74,17 @@ void run_eec()
       EnergyCorrelator *eec = new EnergyCorrelator(*jet);
       eec->FillHistograms();
     }
+        
+    jetCountTree_smeared->Fill();
+    jetCountTree_smeared->Write();
 
-    TFile *outfile = new TFile("test_outfile_smeared.root","RECREATE");
-    HistoManager::WriteHistogramsToFile();
-    jetPt->Write(); 
+    
+    HistoManager::WriteHistogramsToFile(); 
+    HistoManager::Cleanup();
     outfile->Close();
 
-    HistoManager::Cleanup();
     delete infilePythia;
     delete outfile;
+
 
 }
