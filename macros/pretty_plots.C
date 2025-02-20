@@ -67,6 +67,12 @@ void pretty_plots()
 		EEC_hist_smeared[i]->GetYaxis()->SetTitle("#frac{1}{N_{jet}} #frac{d #sigma^{[2]}}{dx_{L}}");
 		EEC_hist_truth[i]->GetXaxis()->SetTitle("x_{L}");
 		EEC_hist_truth[i]->GetYaxis()->SetTitle("#frac{1}{N_{jet}} #frac{d #sigma^{[2]}}{dx_{L}}");
+		
+		std::cout << "Histogram: " << EEC_hist_smeared[i]->GetName() 
+          << ", Xmin: " << EEC_hist_smeared[i]->GetXaxis()->GetXmin() 
+          << ", Xmax: " << EEC_hist_smeared[i]->GetXaxis()->GetXmax() 
+          << std::endl;
+
 
 		TRatioPlot* rp = new TRatioPlot(EEC_hist_truth[i], EEC_hist_smeared[i]);
         rp->SetH1DrawOpt("PE");  // so the top pad is drawn with points
