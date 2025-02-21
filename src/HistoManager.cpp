@@ -7,6 +7,7 @@ namespace HistoManager {
   
   void InitializeHistograms(const std::vector<float>& edges) 
   {
+    int bins[7]={75,75,75,50,30,6,35};
     ptBinEdges = edges;
     histograms["weight"] = new TH1D("weight", "weight", 100, 0, 0.25);
     histograms["deltaR"] = new TH1D("deltaR", "DeltaR", 100, 0, 1);
@@ -16,11 +17,11 @@ namespace HistoManager {
 
       std::ostringstream histName;
       histName << "eec_pt_bin_" << ptBinEdges[i] << "_" << ptBinEdges[i + 1];
-      histograms[histName.str()] = new TH1D(histName.str().c_str(), histName.str().c_str(), 100, 0.0005, 1);
+      histograms[histName.str()] = new TH1D(histName.str().c_str(), histName.str().c_str(), bins[i], 0.0005, 1);
 
       std::ostringstream histName_E3C;
       histName_E3C << "E3C_pt_bin" << ptBinEdges[i] << "_" << ptBinEdges[i + 1];
-      histograms[histName_E3C.str()] = new TH1D(histName_E3C.str().c_str(), histName_E3C.str().c_str(), 100, 0.0005, 1);
+      histograms[histName_E3C.str()] = new TH1D(histName_E3C.str().c_str(), histName_E3C.str().c_str(), bins[i], 0.0005, 1);
     }
   }
 

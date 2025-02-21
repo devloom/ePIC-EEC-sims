@@ -38,7 +38,6 @@ void run_eec()
 
     TTree *jetCountTree_truth = new TTree("jetCountTree_truth","a tree with jet counts");           //creating an extra tree for jetcounts for scaling
     jetCountTree_truth->Branch("jetCounts_truth", jetCounts_truth, "jetCounts_truth[7]/D");
-
     HistoManager::InitializeHistograms(ptbins);
 
 
@@ -51,6 +50,7 @@ void run_eec()
       int count=0;                                      //exclusions and cut
       for (int j = 0; j < nConstituents; j++)
 						{if (dtr_PID->at(j) == 11 ||dtr_PID->at(j) == 22|| fabs(dtr_PID->at(j)) == 2212 ||fabs(dtr_PID->at(j)) == 2112) {
+            // {if (dtr_PID->at(j) == 0) {
 							count++;}}
 					if (count==nConstituents)
 						{continue;}

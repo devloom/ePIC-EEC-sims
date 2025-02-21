@@ -3,7 +3,7 @@
 
 R__LOAD_LIBRARY(../lib/libEnergyCorrelator.so)
 
-void pretty_plots()
+void pretty_plots_E3C()
 {
     TFile *file_truth = TFile::Open("test_outfile_truth.root", "READ");
     TFile *file_smeared = TFile::Open("test_outfile_smeared.root", "READ");
@@ -34,8 +34,8 @@ void pretty_plots()
 	
     std::vector<TH1F*> EEC_hist_smeared(6), EEC_hist_truth(6);
     for (int i = 0; i < 6; ++i) {                                      //get the histogram from root outfile
-        std::string hist_name_smeared = Form("eec_pt_bin_%d_%d", (int)pTarray[i], (int)pTarray[i+1]);
-        std::string hist_name_truth = Form("eec_pt_bin_%d_%d", (int)pTarray[i], (int)pTarray[i+1]);
+        std::string hist_name_smeared = Form("E3C_pt_bin_%d_%d", (int)pTarray[i], (int)pTarray[i+1]);
+        std::string hist_name_truth = Form("E3C_pt_bin_%d_%d", (int)pTarray[i], (int)pTarray[i+1]);
 
         EEC_hist_smeared[i] = (TH1F*)file_smeared->Get(hist_name_smeared.c_str());
         EEC_hist_truth[i] = (TH1F*)file_truth->Get(hist_name_truth.c_str());}
@@ -94,6 +94,26 @@ void pretty_plots()
 		gPad->Update();
 		}
 
+
+
+        
+for (int i = 0; i < 6; ++i) {
+    std::string hist_name_smeared = Form("E3C_pt_bin_%d_%d", (int)pTarray[i], (int)pTarray[i+1]);
+    std::string hist_name_truth = Form("E3C_pt_bin_%d_%d", (int)pTarray[i], (int)pTarray[i+1]);
+
+    std::cout << "Looking for histograms: " << hist_name_truth << " and " << hist_name_smeared << std::endl;
+
+    EEC_hist_smeared[i] = (TH1F*)file_smeared->Get(hist_name_smeared.c_str());
+    EEC_hist_truth[i] = (TH1F*)file_truth->Get(hist_name_truth.c_str());
+
+    if (!EEC_hist_smeared[i]) {
+        std::cerr << "Warning: Missing smeared histogram: " << hist_name_smeared << std::endl;
+    }
+    if (!EEC_hist_truth[i]) {
+        std::cerr << "Warning: Missing truth histogram: " << hist_name_truth << std::endl;
+    }
+}
+
 	
 
 	c1->cd(7);
@@ -113,6 +133,6 @@ void pretty_plots()
 	legend->Draw();
 
     c1->Update();
-	c1->SaveAs("../../simulations/plots/E2C_pretty_plot.pdf"); // Save the histogram as a PDF file
+	c1->SaveAs("../../simulations/plots/E#C_pretty_plot.pdf"); // Save the histogram as a PDF file
 
 }
