@@ -24,6 +24,8 @@ void EnergyCorrelator::FillHistograms() const
   float jetPt = jet.get4vec().Pt();
   int ptBinIndex = HistoManager::GetPtBinIndex(jetPt);
   
+float maxDeltaR=0.0f;
+
   for (size_t i = 0; i < constituents.size(); ++i)
   {
     for (size_t j = i+1; j < constituents.size(); ++j)
@@ -54,6 +56,7 @@ void EnergyCorrelator::FillHistograms() const
       
       float deltaR = ROOT::Math::VectorUtil::DeltaR(constituents[i].get4vec(), constituents[j].get4vec());
       float weight = (constituents[i].get4vec().E()*constituents[j].get4vec().E())/jetE2;
+      maxDeltaR = std::max(maxDeltaR, deltaR);
 
       if (HistoManager::histograms.count("deltaR_vs_weight")) 
       {
@@ -73,7 +76,7 @@ void EnergyCorrelator::FillHistograms() const
         key << "eec_pt_bin_" << HistoManager::ptBinEdges[ptBinIndex] << "_" << HistoManager::ptBinEdges[ptBinIndex + 1];
         if (HistoManager::histograms.count(key.str())) 
         {
-          ((TH1D*)HistoManager::histograms[key.str()])->Fill(deltaR, weight);
+          ((TH1D*)HistoManager::histograms[key.str()])->Fill(maxDeltaR, weight);
           }
         }
     }
