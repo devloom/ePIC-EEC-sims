@@ -42,8 +42,12 @@ void EnergyCorrelator::FillHistograms() const
         
         if (ptBinIndex >= 0) 
         {
+          // std::ostringstream key_E3C;
+          // key_E3C << "E3C_pt_bin_" << HistoManager::ptBinEdges[ptBinIndex] << "_" << HistoManager::ptBinEdges[ptBinIndex + 1];
           std::ostringstream key_E3C;
-          key_E3C << "E3C_pt_bin_" << HistoManager::ptBinEdges[ptBinIndex] << "_" << HistoManager::ptBinEdges[ptBinIndex + 1];
+          key_E3C << "E3C_pt_bin_" << static_cast<int>(HistoManager::ptBinEdges[ptBinIndex]) 
+        << "_" << static_cast<int>(HistoManager::ptBinEdges[ptBinIndex + 1]);
+
           if (HistoManager::histograms.count(key_E3C.str())) 
           {
             ((TH1D*)HistoManager::histograms[key_E3C.str()])->Fill(deltaR_E3C, weight_E3C);

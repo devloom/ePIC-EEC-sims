@@ -1,15 +1,17 @@
 #include "../include/HistoManager.h"
-
+#include <cmath>
+#include <iostream>
 
 R__LOAD_LIBRARY(../lib/libEnergyCorrelator.so)
 
 void pretty_plots_E3C()
 {
-    TFile *file_truth = TFile::Open("test_outfile_truth.root", "READ");
-    TFile *file_smeared = TFile::Open("test_outfile_smeared.root", "READ");
+
+    TFile *file_truth = TFile::Open("test_outfile_truth_E3C.root", "READ");
+    TFile *file_smeared = TFile::Open("test_outfile_smeared_E3C.root", "READ");
    
 
-	TCanvas* c1 = new TCanvas("c1", "Histogram Canvas", 1600, 1000); // 800 and 600 tell the program the size of the histogram
+	TCanvas* c1 = new TCanvas("c1", "Histogram Canvas", 3000, 2000); // 800 and 600 tell the program the size of the histogram
 	c1->Divide(4,2);
     double xmax = 1;
 	double xmin =0.0005;
@@ -32,46 +34,47 @@ void pretty_plots_E3C()
     jetCountTree_smeared->GetEntry(0);
   
 	
-    std::vector<TH1F*> EEC_hist_smeared(6), EEC_hist_truth(6);
+    std::vector<TH1D*> E3C_hist_smeared(6), E3C_hist_truth(6);
     for (int i = 0; i < 6; ++i) {                                      //get the histogram from root outfile
         std::string hist_name_smeared = Form("E3C_pt_bin_%d_%d", (int)pTarray[i], (int)pTarray[i+1]);
         std::string hist_name_truth = Form("E3C_pt_bin_%d_%d", (int)pTarray[i], (int)pTarray[i+1]);
 
-        EEC_hist_smeared[i] = (TH1F*)file_smeared->Get(hist_name_smeared.c_str());
-        EEC_hist_truth[i] = (TH1F*)file_truth->Get(hist_name_truth.c_str());}
+        E3C_hist_smeared[i] = (TH1D*)file_smeared->Get(hist_name_smeared.c_str());
+        E3C_hist_truth[i] = (TH1D*)file_truth->Get(hist_name_truth.c_str());}
 
 
 	for (int i=0; i<6; ++i){			//drawing histograms
+		std::cout<<jetCounts_smeared[i]<<std::endl;
+		std::cout<<jetCounts_truth[i]<<std::endl;
 		c1->cd(i+1);
 		gPad->SetLeftMargin(0.15);
 		double binwidth;
         if (i<4){binwidth=binwidth_low;}
 		if (i>3){binwidth=binwidth_high;}
-        EEC_hist_smeared[i]->Scale(1. / (jetCounts_smeared[i]*binwidth));
-		EEC_hist_truth[i]->Scale(1. / (jetCounts_truth[i]*binwidth));
-		std::cout<<jetCounts_truth[i]<<std::endl;
+        E3C_hist_smeared[i]->Scale(1. / (jetCounts_smeared[i]*binwidth));
+		E3C_hist_truth[i]->Scale(1. / (jetCounts_truth[i]*binwidth));
+		
 
 
 
-		EEC_hist_smeared[i]->GetXaxis()->SetRangeUser(0.0005, 10);
-		EEC_hist_truth[i]->GetXaxis()->SetRangeUser(0.0005, 10);
-		EEC_hist_smeared[i]->SetMaximum(10.); // Set y-axis maximum
-    	EEC_hist_smeared[i]->SetMinimum(0.001); // Set y-axis maximum
-		EEC_hist_truth[i]->SetMaximum(10.); // Set y-axis maximum
-    	EEC_hist_truth[i]->SetMinimum(0.001); // Set y-axis maximum
-		EEC_hist_smeared[i]->SetLineColor(kRed); 
-        EEC_hist_truth[i]->SetLineColor(kGreen); 
-		EEC_hist_smeared[i]->Draw("Pe"); // Draw the histogram
-		EEC_hist_truth[i]->Draw("Pe SAME"); // Draw the histogram
-		EEC_hist_smeared[i]->GetXaxis()->SetTitle("x_{L}");
-		EEC_hist_smeared[i]->GetYaxis()->SetTitle("#frac{1}{N_{jet}} #frac{d #sigma^{[2]}}{dx_{L}}");
-		EEC_hist_truth[i]->GetXaxis()->SetTitle("x_{L}");
-		EEC_hist_truth[i]->GetYaxis()->SetTitle("#frac{1}{N_{jet}} #frac{d #sigma^{[2]}}{dx_{L}}");
+		E3C_hist_smeared[i]->GetXaxis()->SetRangeUser(0.0005, 10);
+		E3C_hist_truth[i]->GetXaxis()->SetRangeUser(0.0005, 10);
+		E3C_hist_smeared[i]->SetMaximum(10.); // Set y-axis maximum
+    	E3C_hist_smeared[i]->SetMinimum(0.001); // Set y-axis maximum
+		E3C_hist_truth[i]->SetMaximum(10.); // Set y-axis maximum
+    	E3C_hist_truth[i]->SetMinimum(0.001); // Set y-axis maximum
+		E3C_hist_smeared[i]->SetLineColor(kRed); 
+        E3C_hist_truth[i]->SetLineColor(kGreen); 
+		E3C_hist_smeared[i]->Draw("Pe"); // Draw the histogram
+		E3C_hist_truth[i]->Draw("Pe SAME"); // Draw the histogram
+		
+		E3C_hist_truth[i]->GetXaxis()->SetTitle("x_{L}");
+		E3C_hist_truth[i]->GetYaxis()->SetTitle("#frac{1}{N_{jet}} #frac{d #sigma^{[2]}}{dx_{L}}");
 		
 	
 
 
-		TRatioPlot* rp = new TRatioPlot(EEC_hist_truth[i], EEC_hist_smeared[i]);
+		TRatioPlot* rp = new TRatioPlot(E3C_hist_truth[i], E3C_hist_smeared[i]);
         rp->SetH1DrawOpt("PE");  
         rp->SetH2DrawOpt("PE"); 
         rp->Draw("nogrid"); 
@@ -81,8 +84,10 @@ void pretty_plots_E3C()
 		rp->GetLowerPad()->SetLogy(false);
         rp->GetLowerRefGraph()->GetYaxis()->SetRangeUser(0, 3);
 		rp->GetLowerRefGraph()->GetYaxis()->SetTitle("ratio");
+		rp->GetLowerRefGraph()->GetYaxis()->SetTitleOffset(rp->GetLowerRefGraph()->GetYaxis()->GetTitleOffset()+1.5);
 
-		// EEC_hist_smeared[i]->SetTitle("2-point EEC"); // Title
+
+		// E3C_hist_smeared[i]->SetTitle("2-point E3C"); // Title
 		gPad->SetLogx();
 		gPad->SetLogy();
 
@@ -93,26 +98,6 @@ void pretty_plots_E3C()
         
 		gPad->Update();
 		}
-
-
-
-        
-for (int i = 0; i < 6; ++i) {
-    std::string hist_name_smeared = Form("E3C_pt_bin_%d_%d", (int)pTarray[i], (int)pTarray[i+1]);
-    std::string hist_name_truth = Form("E3C_pt_bin_%d_%d", (int)pTarray[i], (int)pTarray[i+1]);
-
-    std::cout << "Looking for histograms: " << hist_name_truth << " and " << hist_name_smeared << std::endl;
-
-    EEC_hist_smeared[i] = (TH1F*)file_smeared->Get(hist_name_smeared.c_str());
-    EEC_hist_truth[i] = (TH1F*)file_truth->Get(hist_name_truth.c_str());
-
-    if (!EEC_hist_smeared[i]) {
-        std::cerr << "Warning: Missing smeared histogram: " << hist_name_smeared << std::endl;
-    }
-    if (!EEC_hist_truth[i]) {
-        std::cerr << "Warning: Missing truth histogram: " << hist_name_truth << std::endl;
-    }
-}
 
 	
 
@@ -128,11 +113,11 @@ for (int i = 0; i < 6; ++i) {
 	legend->SetBorderSize(0); 
 	legend->SetFillStyle(0);
 	legend->SetTextSize(0.05);
-    legend->AddEntry(EEC_hist_smeared[0], "smeared", "l");
-    legend->AddEntry(EEC_hist_truth[0], "truth", "l");
+    legend->AddEntry(E3C_hist_smeared[0], "smeared", "l");
+    legend->AddEntry(E3C_hist_truth[0], "truth", "l");
 	legend->Draw();
 
     c1->Update();
-	c1->SaveAs("../../simulations/plots/E#C_pretty_plot.pdf"); // Save the histogram as a PDF file
+	c1->SaveAs("../../simulations/plots/E3C_pretty_plot.pdf"); // Save the histogram as a PDF file
 
 }

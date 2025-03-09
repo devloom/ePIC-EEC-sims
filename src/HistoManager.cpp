@@ -19,9 +19,13 @@ namespace HistoManager {
       histName << "eec_pt_bin_" << ptBinEdges[i] << "_" << ptBinEdges[i + 1];
       histograms[histName.str()] = new TH1D(histName.str().c_str(), histName.str().c_str(), bins[i], 0.0005, 1);
 
+      // std::ostringstream histName_E3C;
+      // histName_E3C << "E3C_pt_bin_" << ptBinEdges[i] << "_" << ptBinEdges[i + 1];
+      // histograms[histName_E3C.str()] = new TH1D(histName_E3C.str().c_str(), histName_E3C.str().c_str(), bins[i], 0.0005, 1);
       std::ostringstream histName_E3C;
-      histName_E3C << "E3C_pt_bin" << ptBinEdges[i] << "_" << ptBinEdges[i + 1];
+      histName_E3C << "E3C_pt_bin_" << static_cast<int>(ptBinEdges[i]) << "_" << static_cast<int>(ptBinEdges[i + 1]);
       histograms[histName_E3C.str()] = new TH1D(histName_E3C.str().c_str(), histName_E3C.str().c_str(), bins[i], 0.0005, 1);
+
     }
   }
 

@@ -3,14 +3,14 @@
 
 R__LOAD_LIBRARY(../lib/libEnergyCorrelator.so)
 
-void run_eec()
+void run_E3C()
 {
     // =============== Eventually we can just store Jet objects into our trees directly from Pythia ========= //
     // ========== For now just read in the vector branches and we will manually make the jet objects ========== //
     // read pythia jets from file
     // std::string inputPythia = "pythia8_inclusivejets.root";
-    std::string inputPythia = "../../simulations/0_2_smeared_cluster_into_jets.root";
     // std::string inputPythia = "../../simulations/truth_jets.root";
+    std::string inputPythia = "../../simulations/0_2_smeared_cluster_into_jets.root";
     TFile *infilePythia = new TFile(inputPythia.c_str());
     if (!infilePythia || infilePythia->IsZombie()){std::cerr << "Could not open file." << std::endl;return;}
 
@@ -34,11 +34,11 @@ void run_eec()
 
     // Create histograms
     std::vector<float> ptbins = {5,10,15,20,25,30,35,40};
-    double jetCounts_smeared[7] = {0};
-    TFile *outfile = new TFile("test_outfile_smeared.root","RECREATE");
+    double jetCounts_truth[7] = {0};
+    TFile *outfile = new TFile("test_outfile_truth_E3C.root","RECREATE");
 
-    TTree *jetCountTree_smeared = new TTree("jetCountTree_smeared","a tree with jet counts");           //creating an extra tree for jetcounts for scaling
-    jetCountTree_smeared->Branch("jetCounts_smeared", jetCounts_smeared, "jetCounts_smeared[7]/D");
+    TTree *jetCountTree_truth = new TTree("jetCountTree_truth","a tree with jet counts");           //creating an extra tree for jetcounts for scaling
+    jetCountTree_truth->Branch("jetCounts_truth", jetCounts_truth, "jetCounts_truth[7]/D");
     HistoManager::InitializeHistograms(ptbins);
 
 
@@ -50,8 +50,8 @@ void run_eec()
       if (nConstituents < 3){continue;}    
       int count=0;                                      //exclusions and cut
       for (int j = 0; j < nConstituents; j++)
-						// {if (dtr_PID->at(j) == 11 ||dtr_PID->at(j) == 22|| fabs(dtr_PID->at(j)) == 2212 ||fabs(dtr_PID->at(j)) == 2112) {
-            {if (dtr_PID->at(j) == 0) {
+			{if (dtr_PID->at(j) == 11 ||dtr_PID->at(j) == 22|| fabs(dtr_PID->at(j)) == 2212 ||fabs(dtr_PID->at(j)) == 2112) {
+            // {if (dtr_PID->at(j) == 0) {
 							count++;}}
 					if (count==nConstituents)
 						{continue;}
@@ -59,7 +59,7 @@ void run_eec()
             
       for (int k = 0; k < 7; ++k) {
             if (jPt > ptbins[k] && jPt < ptbins[k + 1]) {
-                jetCounts_smeared[k]++;  
+                jetCounts_truth[k]++;  
 
             }
         }
@@ -72,12 +72,12 @@ void run_eec()
         Particle *part = new Particle((*dtr_PID)[j],(*dtr_Px)[j],(*dtr_Py)[j],(*dtr_Pz)[j],(*dtr_E)[j]);
         jet->addConstituent(*part);
       }
-      EnergyCorrelator *eec = new EnergyCorrelator(*jet);
-      eec->FillHistograms();
+      EnergyCorrelator *E3C = new EnergyCorrelator(*jet);
+      E3C->FillHistograms();
     }
         
-    jetCountTree_smeared->Fill();
-    jetCountTree_smeared->Write();
+    jetCountTree_truth->Fill();
+    jetCountTree_truth->Write();
 
     
     HistoManager::WriteHistogramsToFile(); 
