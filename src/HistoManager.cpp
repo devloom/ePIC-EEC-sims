@@ -12,7 +12,9 @@ namespace HistoManager {
     histograms["weight"] = new TH1D("weight", "weight", 100, 0, 0.25);
     histograms["weight_E3C"] = new TH1D("weight_E3C", "weight_E3C", 100, 0, 0.25);
     histograms["deltaR"] = new TH1D("deltaR", "DeltaR", 100, 0, 1);
+    histograms["deltaR_E3C"] = new TH1D("deltaR_E3C", "DeltaR_E3C", 100, 0, 1);
     histograms["deltaR_vs_weight"] = new TH2D("deltaR_vs_weight", "DeltaR vs Weight", 100, 0, 1, 100, 0, 0.25);
+    histograms["deltaR_vs_weight_E3C"] = new TH2D("deltaR_vs_weight_E3C", "DeltaR vs Weight_E3C", 100, 0, 1, 100, 0, 0.25);
    
     for (size_t i = 0; i < ptBinEdges.size() - 1; ++i) {
 

@@ -43,6 +43,14 @@ void EnergyCorrelator::FillHistograms() const
       {
         ((TH1D*)HistoManager::histograms["weight_E3C"])->Fill(weight_E3C);
       }
+      if (HistoManager::histograms.count("deltaR_vs_weight_E3C")) 
+      {
+        ((TH2D*)HistoManager::histograms["deltaR_vs_weight_E3C"])->Fill(deltaR_E3C, weight_E3C);
+      }
+      if (HistoManager::histograms.count("deltaR_E3C")) 
+      {
+        ((TH1D*)HistoManager::histograms["deltaR_E3C"])->Fill(deltaR_E3C);
+      }
         if (ptBinIndex >= 0) 
         {
           // std::ostringstream key_E3C;
