@@ -7,9 +7,10 @@ namespace HistoManager {
   
   void InitializeHistograms(const std::vector<float>& edges) 
   {
-    int bins[7]={75,75,75,50,30,6,35};
+    int bins[7]={200,100,75,50,30,6,35};
     ptBinEdges = edges;
     histograms["weight"] = new TH1D("weight", "weight", 100, 0, 0.25);
+    histograms["weight_E3C"] = new TH1D("weight_E3C", "weight_E3C", 100, 0, 0.25);
     histograms["deltaR"] = new TH1D("deltaR", "DeltaR", 100, 0, 1);
     histograms["deltaR_vs_weight"] = new TH2D("deltaR_vs_weight", "DeltaR vs Weight", 100, 0, 1, 100, 0, 0.25);
    

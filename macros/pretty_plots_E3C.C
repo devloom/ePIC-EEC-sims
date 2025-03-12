@@ -44,8 +44,6 @@ void pretty_plots_E3C()
 
 
 	for (int i=0; i<6; ++i){			//drawing histograms
-		std::cout<<jetCounts_smeared[i]<<std::endl;
-		std::cout<<jetCounts_truth[i]<<std::endl;
 		c1->cd(i+1);
 		gPad->SetLeftMargin(0.15);
 		double binwidth;
@@ -59,17 +57,17 @@ void pretty_plots_E3C()
 
 		E3C_hist_smeared[i]->GetXaxis()->SetRangeUser(0.0005, 10);
 		E3C_hist_truth[i]->GetXaxis()->SetRangeUser(0.0005, 10);
-		E3C_hist_smeared[i]->SetMaximum(10.); // Set y-axis maximum
-    	E3C_hist_smeared[i]->SetMinimum(0.001); // Set y-axis maximum
-		E3C_hist_truth[i]->SetMaximum(10.); // Set y-axis maximum
-    	E3C_hist_truth[i]->SetMinimum(0.001); // Set y-axis maximum
+		E3C_hist_smeared[i]->SetMaximum(1.); // Set y-axis maximum
+    	E3C_hist_smeared[i]->SetMinimum(0.00001); // Set y-axis maximum
+		E3C_hist_truth[i]->SetMaximum(1.); // Set y-axis maximum
+    	E3C_hist_truth[i]->SetMinimum(0.00001); // Set y-axis maximum
 		E3C_hist_smeared[i]->SetLineColor(kRed); 
         E3C_hist_truth[i]->SetLineColor(kGreen); 
 		E3C_hist_smeared[i]->Draw("Pe"); // Draw the histogram
 		E3C_hist_truth[i]->Draw("Pe SAME"); // Draw the histogram
 		
 		E3C_hist_truth[i]->GetXaxis()->SetTitle("x_{L}");
-		E3C_hist_truth[i]->GetYaxis()->SetTitle("#frac{1}{N_{jet}} #frac{d #sigma^{[2]}}{dx_{L}}");
+		E3C_hist_truth[i]->GetYaxis()->SetTitle("#frac{1}{N_{jet}} #frac{d #sigma^{[3]}}{dx_{L}}");
 		
 	
 
@@ -113,8 +111,8 @@ void pretty_plots_E3C()
 	legend->SetBorderSize(0); 
 	legend->SetFillStyle(0);
 	legend->SetTextSize(0.05);
-    legend->AddEntry(E3C_hist_smeared[0], "smeared", "l");
-    legend->AddEntry(E3C_hist_truth[0], "truth", "l");
+    legend->AddEntry(E3C_hist_smeared[0], "smeared detector", "l");
+    legend->AddEntry(E3C_hist_truth[0], "perfect detector", "l");
 	legend->Draw();
 
     c1->Update();

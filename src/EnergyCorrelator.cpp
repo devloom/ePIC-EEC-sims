@@ -39,7 +39,10 @@ void EnergyCorrelator::FillHistograms() const
         
         float weight_E3C = (constituents[i].get4vec().E()*constituents[j].get4vec().E()*constituents[k].get4vec().E())/jetE3;
 
-        
+        if (HistoManager::histograms.count("weight_E3C")) 
+      {
+        ((TH1D*)HistoManager::histograms["weight_E3C"])->Fill(weight_E3C);
+      }
         if (ptBinIndex >= 0) 
         {
           // std::ostringstream key_E3C;

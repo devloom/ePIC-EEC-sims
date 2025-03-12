@@ -9,7 +9,7 @@ void pretty_plots()
     TFile *file_smeared = TFile::Open("test_outfile_smeared.root", "READ");
    
 
-	TCanvas* c1 = new TCanvas("c1", "Histogram Canvas", 3000, 2000); // 800 and 600 tell the program the size of the histogram
+	TCanvas* c1 = new TCanvas("c1", "Histogram Canvas", 1600, 1000); // 800 and 600 tell the program the size of the histogram
 	c1->Divide(4,2);
     double xmax = 1;
 	double xmin =0.0005;
@@ -49,7 +49,7 @@ void pretty_plots()
 		if (i>3){binwidth=binwidth_high;}
         EEC_hist_smeared[i]->Scale(1. / (jetCounts_smeared[i]*binwidth));
 		EEC_hist_truth[i]->Scale(1. / (jetCounts_truth[i]*binwidth));
-		
+
 
 
 
@@ -63,7 +63,8 @@ void pretty_plots()
         EEC_hist_truth[i]->SetLineColor(kGreen); 
 		EEC_hist_smeared[i]->Draw("Pe"); // Draw the histogram
 		EEC_hist_truth[i]->Draw("Pe SAME"); // Draw the histogram
-		
+		EEC_hist_smeared[i]->GetXaxis()->SetTitle("x_{L}");
+		EEC_hist_smeared[i]->GetYaxis()->SetTitle("#frac{1}{N_{jet}} #frac{d #sigma^{[2]}}{dx_{L}}");
 		EEC_hist_truth[i]->GetXaxis()->SetTitle("x_{L}");
 		EEC_hist_truth[i]->GetYaxis()->SetTitle("#frac{1}{N_{jet}} #frac{d #sigma^{[2]}}{dx_{L}}");
 		
@@ -80,8 +81,6 @@ void pretty_plots()
 		rp->GetLowerPad()->SetLogy(false);
         rp->GetLowerRefGraph()->GetYaxis()->SetRangeUser(0, 3);
 		rp->GetLowerRefGraph()->GetYaxis()->SetTitle("ratio");
-		rp->GetLowerRefGraph()->GetYaxis()->SetTitleOffset(rp->GetLowerRefGraph()->GetYaxis()->GetTitleOffset()+1.5);
-
 
 		// EEC_hist_smeared[i]->SetTitle("2-point EEC"); // Title
 		gPad->SetLogx();
@@ -109,8 +108,8 @@ void pretty_plots()
 	legend->SetBorderSize(0); 
 	legend->SetFillStyle(0);
 	legend->SetTextSize(0.05);
-    legend->AddEntry(EEC_hist_smeared[0], "smeared", "l");
-    legend->AddEntry(EEC_hist_truth[0], "truth", "l");
+    legend->AddEntry(EEC_hist_smeared[0], "smeared detector", "l");
+    legend->AddEntry(EEC_hist_truth[0], "perfect detector", "l");
 	legend->Draw();
 
     c1->Update();
