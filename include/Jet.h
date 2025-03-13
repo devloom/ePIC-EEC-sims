@@ -19,6 +19,7 @@ public:
   float getR() const {return R;};
   const LorentzVector& get4vec() const {return jet4vec;};
   const std::vector<Particle>& getConstituents() const {return constituents;};
+  int getNConstituents() const {return constituents.size();};
   
 private:
     std::vector<Particle> constituents;

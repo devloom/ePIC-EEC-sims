@@ -14,21 +14,24 @@ void EnergyCorrelator::FillHistograms() const
 
   // jet energy
   float jetE = jet.get4vec().E();
-  if (jetE==0) return;
+  if (jetE <= 0){return;}
   float jetE2 = jetE*jetE;
   float jetE3 = jetE*jetE*jetE;
-
-  if (jetE <= 0){return;}
 
   // jet pt
   float jetPt = jet.get4vec().Pt();
   int ptBinIndex = HistoManager::GetPtBinIndex(jetPt);
+  if (ptBinIndex < 0){return;}
+  if (HistoManager::histograms.count("jetCounts")) 
+  {
+    ((TH1I*)HistoManager::histograms["jetCounts"])->Fill(ptBinIndex);
+  }
+
   
   for (size_t i = 0; i < constituents.size(); ++i)
   {
     for (size_t j = i+1; j < constituents.size(); ++j)
     {
-      
       for (size_t k = j+1; k < constituents.size(); ++k)
       {
         float deltaR_E3C_ij = ROOT::Math::VectorUtil::DeltaR(constituents[i].get4vec(), constituents[j].get4vec());
@@ -40,31 +43,30 @@ void EnergyCorrelator::FillHistograms() const
         float weight_E3C = (constituents[i].get4vec().E()*constituents[j].get4vec().E()*constituents[k].get4vec().E())/jetE3;
 
         if (HistoManager::histograms.count("weight_E3C")) 
-      {
-        ((TH1D*)HistoManager::histograms["weight_E3C"])->Fill(weight_E3C);
-      }
-      if (HistoManager::histograms.count("deltaR_vs_weight_E3C")) 
-      {
-        ((TH2D*)HistoManager::histograms["deltaR_vs_weight_E3C"])->Fill(deltaR_E3C, weight_E3C);
-      }
-      if (HistoManager::histograms.count("deltaR_E3C")) 
-      {
-        ((TH1D*)HistoManager::histograms["deltaR_E3C"])->Fill(deltaR_E3C);
-      }
+        {
+          ((TH1D*)HistoManager::histograms["weight_E3C"])->Fill(weight_E3C);
+        }
+        if (HistoManager::histograms.count("deltaR_vs_weight_E3C")) 
+        {
+          ((TH2D*)HistoManager::histograms["deltaR_vs_weight_E3C"])->Fill(deltaR_E3C, weight_E3C);
+        }
+        if (HistoManager::histograms.count("deltaR_E3C")) 
+        {
+          ((TH1D*)HistoManager::histograms["deltaR_E3C"])->Fill(deltaR_E3C);
+        }
         if (ptBinIndex >= 0) 
         {
           // std::ostringstream key_E3C;
           // key_E3C << "E3C_pt_bin_" << HistoManager::ptBinEdges[ptBinIndex] << "_" << HistoManager::ptBinEdges[ptBinIndex + 1];
           std::ostringstream key_E3C;
           key_E3C << "E3C_pt_bin_" << static_cast<int>(HistoManager::ptBinEdges[ptBinIndex]) 
-        << "_" << static_cast<int>(HistoManager::ptBinEdges[ptBinIndex + 1]);
+          << "_" << static_cast<int>(HistoManager::ptBinEdges[ptBinIndex + 1]);
 
           if (HistoManager::histograms.count(key_E3C.str())) 
           {
             ((TH1D*)HistoManager::histograms[key_E3C.str()])->Fill(deltaR_E3C, weight_E3C);
-            }
           }
-      
+        }
       }
       
       float deltaR = ROOT::Math::VectorUtil::DeltaR(constituents[i].get4vec(), constituents[j].get4vec());
