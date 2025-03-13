@@ -30,9 +30,9 @@ void EnergyCorrelator::FillHistograms() const
   
   for (size_t i = 0; i < constituents.size(); ++i)
   {
-    for (size_t j = i+1; j < constituents.size(); ++j)
+    for (size_t j = 0; j < constituents.size(); ++j)
     {
-      for (size_t k = j+1; k < constituents.size(); ++k)
+      for (size_t k = 0; k < constituents.size(); ++k)
       {
         float deltaR_E3C_ij = ROOT::Math::VectorUtil::DeltaR(constituents[i].get4vec(), constituents[j].get4vec());
         float deltaR_E3C_jk = ROOT::Math::VectorUtil::DeltaR(constituents[j].get4vec(), constituents[k].get4vec());
