@@ -25,7 +25,7 @@ void Jet::addConstituent(const Particle& part)
 {
   // only hadronic constituents
   int pid = part.getPID();
-  if (pid == 11 || pid == 22|| fabs(pid) == 2212 || fabs(pid) == 2112 || pid == 0)
+  if (pid == 11 || pid == 22 || pid == 0)
   {
     return;
   }
