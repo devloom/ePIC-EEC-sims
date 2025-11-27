@@ -1,5 +1,6 @@
 #include "../include/HistoManager.h"
-
+#include <sstream>
+#include <cmath> 
 
 R__LOAD_LIBRARY(../lib/libEnergyCorrelator.so)
 
@@ -65,7 +66,7 @@ void run_eec(int runtype = 1)
     // ================================================= //
 
     // Create histograms (output file must be declared before InitializeHistograms)
-    TFile *outfile = new TFile(Form("test_outfile_%s_GenShd_1_R_1_n_2_1M.root",s_runtype[runtype].c_str()),"RECREATE");
+    TFile *outfile = new TFile(Form("test_outfile_%s_GenShd_1_R_1_n_05_5M.root",s_runtype[runtype].c_str()),"RECREATE");
     std::vector<float> ptbins = {5,10,15,20,30,30,35,40};
     HistoManager::InitializeHistograms(ptbins);
 
@@ -83,9 +84,11 @@ void run_eec(int runtype = 1)
     for (int i = 0; i < nentries; ++i)
     {
       jettree->GetEntry(i);
-      
       if (i % 100000 == 0){std::cout << "Processed " << i << " jets."  << std::endl;}  
             
+      if (nConstituents<3) {continue;}
+
+
       Jet *jet = new Jet();
       for (int j = 0; j < nConstituents; j++)
       {
@@ -93,9 +96,23 @@ void run_eec(int runtype = 1)
         jet->addConstituent(*part);
         delete part;
       }
+      if (jet->getNConstituents() == 0) { delete jet; continue; }
+      
+      // Fill jetCounts using hadron-only pT from the jet's four-vector
+      double pt_had = jet->jPt(); // same as jet->get4vec().Pt()
+      int bin = HistoManager::GetPtBinIndex(pt_had);
+      if (bin >= 0 && HistoManager::histograms.count("jetCounts")) {
+        ((TH1I*)HistoManager::histograms["jetCounts"])->Fill(bin);
+      }
 
-      // remove jets that have less than 3 hadronic constituents
-      if (jet->getNConstituents()<3){delete jet; continue;} 
+      // if (jet->getNConstituents() >= 2) {
+      //   const auto& cons = jet->getConstituents();
+      //   int pid0 = cons[0].getPID();
+      //   int pid1 = cons[1].getPID();
+      //   std::cout << "E2C pair PIDs: (" << pid0 << ", " << pid1 << ")\n";
+      // }
+
+      
       if (jet->jPt()<5){delete jet; continue;}
       if (jet->jPt()>5 && jet->jPt()<10){jets_5_10++;}
       if (jet->jPt()>10 && jet->jPt()<15){jets_10_15++;}
@@ -112,13 +129,13 @@ void run_eec(int runtype = 1)
       delete jet;
       // std::cout << "Total jets processed: " << nentries << std::endl;
       // // std::cout << "Jets after filter: " << jetsKept << std::endl;
-      // // std::cout << "jets yield:" << (double) jetsKept/nentries << std::endl;
+      // std::cout << "jets yield:" << (double) jetsKept/nentries << std::endl;
       // std::cout << "jet yield of jPt=5-10GeV: " << jets_5_10/nentries <<std::endl;
       // std::cout << "jet yield of jPt=10-15GeV: " << jets_10_15/nentries <<std::endl;
       // std::cout << "jet yield of jPt=15-20GeV: " << jets_15_20/nentries <<std::endl;
       // std::cout << "jet yield of jPt=20-25GeV: " << jets_20_25/nentries <<std::endl;
       // std::cout << "jet yield of jPt=25-30GeV: " << jets_25_30/nentries <<std::endl;
-      std::cout << "progress=" << ((i + 1) * 100.0 / nentries) << "%" << std::endl;
+      // std::cout << "progress=" << ((i + 1) * 100.0 / nentries) << "%" << std::endl;
 
 
 

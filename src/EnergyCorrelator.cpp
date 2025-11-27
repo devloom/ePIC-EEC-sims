@@ -1,6 +1,7 @@
 #include <sstream> 
 #include <cmath>
 #include "EnergyCorrelator.h"
+#include <iostream>
 
 
 EnergyCorrelator::EnergyCorrelator(const Jet& jet) : jet(jet) {}
@@ -12,6 +13,11 @@ void EnergyCorrelator::FillHistograms() const
   // jet consituents
   const auto& constituents = jet.getConstituents();
 
+  // auto isChargedHadron = [](int pid){
+  //   return (abs(pid)==211 || abs(pid)==321 || abs(pid)==2212); // π±, K±, p/ p̅
+  // };
+  
+
   // jet energy
   float jetE = jet.get4vec().E();
   if (jetE <= 0){return;}
@@ -22,10 +28,10 @@ void EnergyCorrelator::FillHistograms() const
   float jetPt = jet.get4vec().Pt();
   int ptBinIndex = HistoManager::GetPtBinIndex(jetPt);
   if (ptBinIndex < 0){return;}
-  if (HistoManager::histograms.count("jetCounts")) 
-  {
-    ((TH1I*)HistoManager::histograms["jetCounts"])->Fill(ptBinIndex);
-  }
+  // if (HistoManager::histograms.count("jetCounts")) 
+  // {
+  //   ((TH1I*)HistoManager::histograms["jetCounts"])->Fill(ptBinIndex);
+  // }
 
   
   for (size_t i = 0; i < constituents.size(); ++i)
@@ -34,6 +40,14 @@ void EnergyCorrelator::FillHistograms() const
     {
       for (size_t k = 0; k < constituents.size(); ++k)
       {
+        // int pid_i = constituents[i].getPID();
+        // int pid_j = constituents[j].getPID();
+        // int pid_k = constituents[k].getPID();
+
+        // keep only triples of charged hadrons
+        // if (!isChargedHadron(pid_i) || !isChargedHadron(pid_j) || !isChargedHadron(pid_k))
+        //   continue;
+
         float deltaR_E3C_ij = ROOT::Math::VectorUtil::DeltaR(constituents[i].get4vec(), constituents[j].get4vec());
         float deltaR_E3C_jk = ROOT::Math::VectorUtil::DeltaR(constituents[j].get4vec(), constituents[k].get4vec());
         float deltaR_E3C_ik = ROOT::Math::VectorUtil::DeltaR(constituents[i].get4vec(), constituents[k].get4vec());
@@ -86,10 +100,19 @@ void EnergyCorrelator::FillHistograms() const
         }
       }
       
+      // int pid_i2 = constituents[i].getPID();
+      // int pid_j2 = constituents[j].getPID();
+
+      // keep only pairs of charged hadrons
+      // if (!isChargedHadron(pid_i2) || !isChargedHadron(pid_j2))
+      //   continue;
+
       float deltaR = ROOT::Math::VectorUtil::DeltaR(constituents[i].get4vec(), constituents[j].get4vec());
       float theta = ROOT::Math::VectorUtil::Angle(constituents[i].get4vec(), constituents[j].get4vec());
 
       float weight = pow(constituents[i].get4vec().E()*constituents[j].get4vec().E(),2)/jetE2;
+
+      // std::cout << "E2C pair PIDs: (" << pid_i2 << ", " << pid_j2 << ")\n";
 
       if (HistoManager::histograms.count("deltaR_vs_weight")) 
       {
