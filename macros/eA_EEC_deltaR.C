@@ -18,14 +18,13 @@ void eA_EEC_deltaR()
 	double binwidth_low=(xmax-xmin)/bins_low;
 	double binwidth_high=(xmax-xmin)/bins_high;
 
-	int pTarray[7]={5,10,15,20,25,30,35};
+	int pTarray[7]={5,10,15,20,30,35,40};
 
-    TFile *file_truth_ep = TFile::Open("test_outfile_truth_ep_GenShd_1_R_1_n_05_5M.root", "READ");
-    TFile *file_truth_eAu = TFile::Open("test_outfile_truth_eAu_GenShd_1_R_1_n_05_5M.root", "READ");
-	TFile *file_smeared_ep = TFile::Open("test_outfile_smeared_ep_GenShd_1_R_1_n_05_5M.root", "READ");
-    TFile *file_smeared_eAu = TFile::Open("test_outfile_smeared_eAu_GenShd_1_R_1_n_05_5M.root", "READ");
-	
-	
+    TFile *file_truth_ep = TFile::Open("/home/miyagu/ePIC-EEC-sims/macros/great_lakes_data/truth_EEC_ep_high_pt_genshd_1_merged.root", "READ");
+    TFile *file_truth_eAu = TFile::Open("/home/miyagu/ePIC-EEC-sims/macros/great_lakes_data/truth_EEC_eAu_high_pt_genshd_1_merged.root", "READ");
+	TFile *file_smeared_ep = TFile::Open("/home/miyagu/ePIC-EEC-sims/macros/great_lakes_data/smeared_EEC_ep_high_pt_genshd_1_merged.root", "READ");
+    TFile *file_smeared_eAu = TFile::Open("/home/miyagu/ePIC-EEC-sims/macros/great_lakes_data/smeared_EEC_eAu_high_pt_genshd_1_merged.root", "READ");
+
 
 
 
@@ -111,60 +110,66 @@ void eA_EEC_deltaR()
 		// EEC_hist_truth_ep[i]->Rebin(2);
 		// EEC_hist_truth_ep[i]->Scale(0.5);
 		EEC_hist_truth_ep[i]->GetXaxis()->SetLimits(0.05, 1);
-		EEC_hist_truth_ep[i]->SetMaximum(1000.); // Set y-axis maximum
-    	EEC_hist_truth_ep[i]->SetMinimum(0.03); // Set y-axis maximum
+		// EEC_hist_truth_ep[i]->SetMaximum(1000.); // Set y-axis maximum
+    	// EEC_hist_truth_ep[i]->SetMinimum(0.03); // Set y-axis maximum
 		EEC_hist_truth_ep[i]->SetLineColor(kRed); 
 		EEC_hist_truth_ep[i]->SetMarkerSize(0.5);
 		EEC_hist_truth_ep[i]->SetMarkerStyle(21);
 		EEC_hist_truth_ep[i]->SetMarkerColor(kRed);
 		EEC_hist_truth_ep[i]->Draw("pe"); // Draw the histogram
-		// EEC_hist_truth_ep[i]->GetXaxis()->SetTitle("#deltaR");
-		EEC_hist_truth_ep[i]->GetXaxis()->SetTitle("#DeltaR");
+		EEC_hist_truth_ep[i]->GetXaxis()->SetTitle("#deltaR");
+		// EEC_hist_truth_ep[i]->GetXaxis()->SetTitle("#theta");
 		EEC_hist_truth_ep[i]->GetYaxis()->SetTitle("#frac{1}{N_{jet}} #frac{d #sigma^{[2]}}{dx_{L}}");
 		// EEC_hist_truth_eAu[i]->Rebin(2);
 		// EEC_hist_truth_eAu[i]->Scale(0.5);
         EEC_hist_truth_eAu[i]->GetXaxis()->SetLimits(0.05, 1);
-		EEC_hist_truth_eAu[i]->SetMaximum(1000.); // Set y-axis maximum
-    	EEC_hist_truth_eAu[i]->SetMinimum(0.03); // Set y-axis maximum
+		// EEC_hist_truth_eAu[i]->SetMaximum(1000.); // Set y-axis maximum
+    	// EEC_hist_truth_eAu[i]->SetMinimum(0.03); // Set y-axis maximum
         EEC_hist_truth_eAu[i]->SetLineColor(kBlue); 
 		EEC_hist_truth_eAu[i]->SetMarkerSize(0.5);
 		EEC_hist_truth_eAu[i]->SetMarkerStyle(22);
 		EEC_hist_truth_eAu[i]->SetMarkerColor(kBlue);
 		EEC_hist_truth_eAu[i]->Draw("pe SAME"); // Draw the histogram
-		EEC_hist_truth_eAu[i]->GetXaxis()->SetTitle("#DeltaR");
+		// EEC_hist_truth_eAu[i]->GetXaxis()->SetTitle("#theta");
 		EEC_hist_truth_eAu[i]->GetYaxis()->SetTitle("#frac{1}{N_{jet}} #frac{d #sigma^{[2]}}{dx_{L}}");
 
 		EEC_hist_smeared_ep[i]->GetXaxis()->SetLimits(0.05, 1);
-		EEC_hist_smeared_ep[i]->SetMaximum(1000.); // Set y-axis maximum
-    	EEC_hist_smeared_ep[i]->SetMinimum(0.03); // Set y-axis maximum
+		// EEC_hist_smeared_ep[i]->SetMaximum(1000.); // Set y-axis maximum
+    	// EEC_hist_smeared_ep[i]->SetMinimum(0.03); // Set y-axis maximum
 		EEC_hist_smeared_ep[i]->SetLineColor(kGreen); 
 		EEC_hist_smeared_ep[i]->SetMarkerSize(0.5);
 		EEC_hist_smeared_ep[i]->SetMarkerStyle(21);
 		EEC_hist_smeared_ep[i]->SetMarkerColor(kGreen);
-		EEC_hist_smeared_ep[i]->Draw("pe SAME"); // Draw the histogram
-		// EEC_hist_smeared_ep[i]->GetXaxis()->SetTitle("#deltaR");
-		EEC_hist_smeared_ep[i]->GetXaxis()->SetTitle("#DeltaR");
+		// EEC_hist_smeared_ep[i]->Draw("pe"); // Draw the histogram
+		EEC_hist_smeared_ep[i]->GetXaxis()->SetTitle("#deltaR");
+		// EEC_hist_smeared_ep[i]->GetXaxis()->SetTitle("#theta");
 		EEC_hist_smeared_ep[i]->GetYaxis()->SetTitle("#frac{1}{N_{jet}} #frac{d #sigma^{[2]}}{dx_{L}}");
 		// EEC_hist_smeared_eAu[i]->Rebin(2);
 		// EEC_hist_smeared_eAu[i]->Scale(0.5);
         EEC_hist_smeared_eAu[i]->GetXaxis()->SetLimits(0.05, 1);
-		EEC_hist_smeared_eAu[i]->SetMaximum(1000.); // Set y-axis maximum
-    	EEC_hist_smeared_eAu[i]->SetMinimum(0.03); // Set y-axis maximum
+		// EEC_hist_smeared_eAu[i]->SetMaximum(1000.); // Set y-axis maximum
+    	// EEC_hist_smeared_eAu[i]->SetMinimum(0.03); // Set y-axis maximum
         EEC_hist_smeared_eAu[i]->SetLineColor(kMagenta); 
 		EEC_hist_smeared_eAu[i]->SetMarkerSize(0.5);
 		EEC_hist_smeared_eAu[i]->SetMarkerStyle(22);
 		EEC_hist_smeared_eAu[i]->SetMarkerColor(kMagenta);
-		EEC_hist_smeared_eAu[i]->Draw("pe SAME"); // Draw the histogram
-		EEC_hist_smeared_eAu[i]->GetXaxis()->SetTitle("#DeltaR");
+		// EEC_hist_smeared_eAu[i]->Draw("pe SAME"); // Draw the histogram
+		// EEC_hist_smeared_eAu[i]->GetXaxis()->SetTitle("#theta");
 		EEC_hist_smeared_eAu[i]->GetYaxis()->SetTitle("#frac{1}{N_{jet}} #frac{d #sigma^{[2]}}{dx_{L}}");
 		
 
 		
 		TLatex ptLabel;
 		ptLabel.SetNDC();
-		ptLabel.DrawLatex(0.2, 0.75, Form("p_{T}^{jet}: %d - %d GeV", pTarray[i], pTarray[i+1]));
-		ptLabel.DrawLatex(0.2, 0.70, "GenShd=1");
-		ptLabel.DrawLatex(0.2, 0.65, "5M events");
+		ptLabel.SetTextSize(0.04);
+		ptLabel.DrawLatex(0.2, 0.65, "400M events");
+		ptLabel.DrawLatex(0.2, 0.6, "18x110 GeV beam");
+		ptLabel.DrawLatex(0.2, 0.55, " Q^{2}: 700-10000 GeV^{2}");
+		ptLabel.DrawLatex(0.2, 0.5, "GenShd=1");
+		ptLabel.DrawLatex(0.2, 0.45, "1 < #eta < 3.5");
+		ptLabel.DrawLatex(0.2, 0.4, "jet R=1.0");
+		ptLabel.DrawLatex(0.2, 0.35, Form("p_{T}^{jet}: %d - %d GeV/c", pTarray[i], pTarray[i+1]));
+        ptLabel.DrawLatex(0.2, 0.3, "n = 0.5");
 		
 		TLegend *legendE2C = new TLegend(0.55, 0.2, 0.92, 0.3);  // Position the legend
 		legendE2C->SetBorderSize(0); 
@@ -172,12 +177,9 @@ void eA_EEC_deltaR()
 		legendE2C->SetTextSize(0.05);
 		legendE2C->AddEntry(EEC_hist_truth_ep[i], "truth_ep", "p");
         legendE2C->AddEntry(EEC_hist_truth_eAu[i], "truth_eAu", "p");
-		legendE2C->AddEntry(EEC_hist_smeared_ep[i], "smeared_ep", "p");
-        legendE2C->AddEntry(EEC_hist_smeared_eAu[i], "smeared_eAu", "p");
-		TLatex etaLabel;
-		etaLabel.SetNDC();
-		etaLabel.SetTextSize(0.05);
-		etaLabel.DrawLatex(0.55, 0.32, "1 < #eta < 3.5");
+		// legendE2C->AddEntry(EEC_hist_smeared_ep[i], "smeared_ep", "p");
+        // legendE2C->AddEntry(EEC_hist_smeared_eAu[i], "smeared_eAu", "p");
+		
 
 		legendE2C->Draw();
 		
@@ -205,71 +207,74 @@ void eA_EEC_deltaR()
 		std::cout << jetcounts_smeared_eAu->GetBinContent(4) << std::endl;
 
 		E3C_hist_truth_ep[i]->GetXaxis()->SetLimits(0.05, 1);
-		E3C_hist_truth_ep[i]->SetMaximum(1000.); // Set y-axis maximum
-    	E3C_hist_truth_ep[i]->SetMinimum(0.03); // Set y-axis maximum
+		// E3C_hist_truth_ep[i]->SetMaximum(1000.); // Set y-axis maximum/
+    	// E3C_hist_truth_ep[i]->SetMinimum(0.03); // Set y-axis maximum
 		E3C_hist_truth_ep[i]->SetLineColor(kRed); 
 		E3C_hist_truth_ep[i]->SetMarkerSize(0.5);
 		E3C_hist_truth_ep[i]->SetMarkerStyle(21);
 		E3C_hist_truth_ep[i]->SetMarkerColor(kRed);
 		E3C_hist_truth_ep[i]->Draw("pe"); // Draw the histogram
-		// E3C_hist_truth_ep[i]->GetXaxis()->SetTitle("#deltaR");
-		E3C_hist_truth_ep[i]->GetXaxis()->SetTitle("#DeltaR");
+		E3C_hist_truth_ep[i]->GetXaxis()->SetTitle("#deltaR");
+		// E3C_hist_truth_ep[i]->GetXaxis()->SetTitle("#theta");
 		E3C_hist_truth_ep[i]->GetYaxis()->SetTitle("#frac{1}{N_{jet}} #frac{d #sigma^{[3]}}{dx_{L}}");
 
         E3C_hist_truth_eAu[i]->GetXaxis()->SetLimits(0.05, 1);
-		E3C_hist_truth_eAu[i]->SetMaximum(1000.); // Set y-axis maximum
-    	E3C_hist_truth_eAu[i]->SetMinimum(0.03); // Set y-axis maximum
+		// E3C_hist_truth_eAu[i]->SetMaximum(1000.); // Set y-axis maximum
+    	// E3C_hist_truth_eAu[i]->SetMinimum(0.03); // Set y-axis maximum
         E3C_hist_truth_eAu[i]->SetLineColor(kBlue); 
 		E3C_hist_truth_eAu[i]->SetMarkerSize(0.5);
 		E3C_hist_truth_eAu[i]->SetMarkerStyle(22);
 		E3C_hist_truth_eAu[i]->SetMarkerColor(kBlue);
 		E3C_hist_truth_eAu[i]->Draw("pe SAME"); // Draw the histogram
-		E3C_hist_truth_eAu[i]->GetXaxis()->SetTitle("#DeltaR");
+		// E3C_hist_truth_eAu[i]->GetXaxis()->SetTitle("#theta");
 		E3C_hist_truth_eAu[i]->GetYaxis()->SetTitle("#frac{1}{N_{jet}} #frac{d #sigma^{[3]}}{dx_{L}}");
 
 		E3C_hist_smeared_ep[i]->GetXaxis()->SetLimits(0.05, 1);
-		E3C_hist_smeared_ep[i]->SetMaximum(1000.); // Set y-axis maximum
-    	E3C_hist_smeared_ep[i]->SetMinimum(0.03); // Set y-axis maximum
+		// E3C_hist_smeared_ep[i]->SetMaximum(1000.); // Set y-axis maximum
+    	// E3C_hist_smeared_ep[i]->SetMinimum(0.03); // Set y-axis maximum
 		E3C_hist_smeared_ep[i]->SetLineColor(kGreen); 
 		E3C_hist_smeared_ep[i]->SetMarkerSize(0.5);
 		E3C_hist_smeared_ep[i]->SetMarkerStyle(21);
 		E3C_hist_smeared_ep[i]->SetMarkerColor(kGreen);
-		E3C_hist_smeared_ep[i]->Draw("pe SAME"); // Draw the histogram
-		// E3C_hist_smeared_ep[i]->GetXaxis()->SetTitle("#deltaR");
-		E3C_hist_smeared_ep[i]->GetXaxis()->SetTitle("#DeltaR");
+		// E3C_hist_smeared_ep[i]->Draw("pe"); // Draw the histogram
+		E3C_hist_smeared_ep[i]->GetXaxis()->SetTitle("#deltaR");
+		// E3C_hist_smeared_ep[i]->GetXaxis()->SetTitle("#theta");
 		E3C_hist_smeared_ep[i]->GetYaxis()->SetTitle("#frac{1}{N_{jet}} #frac{d #sigma^{[3]}}{dx_{L}}");
 
         E3C_hist_smeared_eAu[i]->GetXaxis()->SetLimits(0.05, 1);
-		E3C_hist_smeared_eAu[i]->SetMaximum(1000.); // Set y-axis maximum
-    	E3C_hist_smeared_eAu[i]->SetMinimum(0.03); // Set y-axis maximum
+		// E3C_hist_smeared_eAu[i]->SetMaximum(1000.); // Set y-axis maximum
+    	// E3C_hist_smeared_eAu[i]->SetMinimum(0.03); // Set y-axis maximum
         E3C_hist_smeared_eAu[i]->SetLineColor(kMagenta); 
 		E3C_hist_smeared_eAu[i]->SetMarkerSize(0.5);
 		E3C_hist_smeared_eAu[i]->SetMarkerStyle(22);
 		E3C_hist_smeared_eAu[i]->SetMarkerColor(kMagenta);
-		E3C_hist_smeared_eAu[i]->Draw("pe SAME"); // Draw the histogram
-		E3C_hist_smeared_eAu[i]->GetXaxis()->SetTitle("#DeltaR");
+		// E3C_hist_smeared_eAu[i]->Draw("pe SAME"); // Draw the histogram
+		// E3C_hist_smeared_eAu[i]->GetXaxis()->SetTitle("#theta");
 		E3C_hist_smeared_eAu[i]->GetYaxis()->SetTitle("#frac{1}{N_{jet}} #frac{d #sigma^{[3]}}{dx_{L}}");
 		
 
 		
 
 		ptLabel.SetNDC();
-		ptLabel.DrawLatex(0.2, 0.75, Form("p_{T}^{jet}: %d - %d GeV", pTarray[i], pTarray[i+1]));
-		ptLabel.DrawLatex(0.2, 0.70, "GenShd=1");
-		ptLabel.DrawLatex(0.2, 0.65, "5M events");
+		ptLabel.SetTextSize(0.04);
+		ptLabel.DrawLatex(0.2, 0.65, "400M events");
+		ptLabel.DrawLatex(0.2, 0.6, "18x110 GeV beam");
+		ptLabel.DrawLatex(0.2, 0.55, " Q^{2}: 700-10000 GeV^{2}");
+		ptLabel.DrawLatex(0.2, 0.5, "GenShd=1");
+		ptLabel.DrawLatex(0.2, 0.45, "1 < #eta < 3.5");
+		ptLabel.DrawLatex(0.2, 0.4, "jet R=1.0");
+		ptLabel.DrawLatex(0.2, 0.35, Form("p_{T}^{jet}: %d - %d GeV/c", pTarray[i], pTarray[i+1]));
+        ptLabel.DrawLatex(0.2, 0.3, "n = 0.5");
 		
 		TLegend *legendE3C = new TLegend(0.55, 0.2, 0.92, 0.3);  // Position the legend
 		legendE3C->SetBorderSize(0); 
 		legendE3C->SetFillStyle(0);
 		legendE3C->SetTextSize(0.05);
-		legendE3C->AddEntry(E3C_hist_truth_ep[i], "truth_ep", "p");
-        legendE3C->AddEntry(E3C_hist_truth_eAu[i], "truth_eAu", "p");
-		legendE3C->AddEntry(E3C_hist_smeared_ep[i], "smeared_ep", "p");
-        legendE3C->AddEntry(E3C_hist_smeared_eAu[i], "smeared_eAu", "p");
+		legendE3C->AddEntry(EEC_hist_truth_ep[i], "truth_ep", "p");
+        legendE3C->AddEntry(EEC_hist_truth_eAu[i], "truth_eAu", "p");
+		// legendE3C->AddEntry(E3C_hist_smeared_ep[i], "smeared_ep", "p");
+        // legendE3C->AddEntry(E3C_hist_smeared_eAu[i], "smeared_eAu", "p");
 
-		etaLabel.SetNDC();
-		etaLabel.SetTextSize(0.05);
-		etaLabel.DrawLatex(0.55, 0.32, "1 < #eta < 3.5");
 		
 
 		legendE3C->Draw();
@@ -326,11 +331,15 @@ void eA_EEC_deltaR()
 		legendRatio->AddEntry(ratio_smeared_ep, "smeared (eAu-ep)/ep", "p");
 		legendRatio->Draw();
 
-		ptLabel.DrawLatex(0.2, 0.85, "5M events");
-		ptLabel.DrawLatex(0.2, 0.8, "GenShd=1");
-		ptLabel.DrawLatex(0.2, 0.75, Form("p_{T}^{jet}: %d - %d GeV", pTarray[i], pTarray[i+1]));
-		ptLabel.DrawLatex(0.2, 0.7, "1 < #eta < 3.5");
-        ptLabel.DrawLatex(0.2, 0.65, "n = 0.5");
+		ptLabel.SetTextSize(0.03);
+		ptLabel.DrawLatex(0.15, 0.85, "400M events");
+		ptLabel.DrawLatex(0.15, 0.8, "18x110 GeV beam");
+		ptLabel.DrawLatex(0.15, 0.75, " Q^{2}: 700-10000 GeV^{2}");
+		ptLabel.DrawLatex(0.15, 0.7, "GenShd=1");
+		ptLabel.DrawLatex(0.15, 0.65, "1 < #eta < 3.5");
+		ptLabel.DrawLatex(0.15, 0.6, "jet R=1.0");
+		ptLabel.DrawLatex(0.15, 0.55, Form("p_{T}^{jet}: %d - %d GeV/c", pTarray[i], pTarray[i+1]));
+        ptLabel.DrawLatex(0.15, 0.5, "n = 0.5");
 		
 
 		

@@ -20,15 +20,15 @@ void eA_EEC()
 
 	int pTarray[7]={5,10,15,20,30,35,40};
 
-    // TFile *file_truth_ep = TFile::Open("/home/miyagu/ePIC-EEC-sims/macros/great_lakes_data/truth_EEC_ep_high_pt_genshd_1_merged.root", "READ");
-    // TFile *file_truth_eAu = TFile::Open("/home/miyagu/ePIC-EEC-sims/macros/great_lakes_data/truth_EEC_eAu_high_pt_genshd_1_merged.root", "READ");
-	// TFile *file_smeared_ep = TFile::Open("/home/miyagu/ePIC-EEC-sims/macros/great_lakes_data/smeared_EEC_ep_high_pt_genshd_1_merged.root", "READ");
-    // TFile *file_smeared_eAu = TFile::Open("/home/miyagu/ePIC-EEC-sims/macros/great_lakes_data/smeared_EEC_eAu_high_pt_genshd_1_merged.root", "READ");
+    TFile *file_truth_ep = TFile::Open("/home/miyagu/ePIC-EEC-sims/macros/great_lakes_data/truth_EEC_ep_high_pt_genshd_1_merged.root", "READ");
+    TFile *file_truth_eAu = TFile::Open("/home/miyagu/ePIC-EEC-sims/macros/great_lakes_data/truth_EEC_eAu_high_pt_genshd_1_merged.root", "READ");
+	TFile *file_smeared_ep = TFile::Open("/home/miyagu/ePIC-EEC-sims/macros/great_lakes_data/smeared_EEC_ep_high_pt_genshd_1_merged.root", "READ");
+    TFile *file_smeared_eAu = TFile::Open("/home/miyagu/ePIC-EEC-sims/macros/great_lakes_data/smeared_EEC_eAu_high_pt_genshd_1_merged.root", "READ");
 
-	TFile *file_truth_ep = TFile::Open("test_outfile_truth_ep_GenShd_1_R_1_n_05_5M.root", "READ");
-    TFile *file_truth_eAu = TFile::Open("test_outfile_truth_eAu_GenShd_1_R_1_n_05_5M.root", "READ");
-	TFile *file_smeared_ep = TFile::Open("test_outfile_smeared_ep_GenShd_1_R_1_n_05_5M.root", "READ");
-    TFile *file_smeared_eAu = TFile::Open("test_outfile_smeared_eAu_GenShd_1_R_1_n_05_5M.root", "READ");
+	// TFile *file_truth_ep = TFile::Open("test_outfile_truth_ep_GenShd_1_R_1_n_05_5M.root", "READ");
+    // TFile *file_truth_eAu = TFile::Open("test_outfile_truth_eAu_GenShd_1_R_1_n_05_5M.root", "READ");
+	// TFile *file_smeared_ep = TFile::Open("test_outfile_smeared_ep_GenShd_1_R_1_n_05_5M.root", "READ");
+    // TFile *file_smeared_eAu = TFile::Open("test_outfile_smeared_eAu_GenShd_1_R_1_n_05_5M.root", "READ");
 
 
 
@@ -43,16 +43,23 @@ void eA_EEC()
 
 	
 
-	TH1I *jetcounts_truth_ep = nullptr;
-	file_truth_ep->GetObject("jetCounts",jetcounts_truth_ep);
-	TH1I *jetcounts_smeared_ep = nullptr;
-	file_smeared_ep->GetObject("jetCounts",jetcounts_smeared_ep);
-	
+	TH1I *jetcountsE2C_truth_ep    = nullptr, *jetcountsE3C_truth_ep    = nullptr;
+	TH1I *jetcountsE2C_truth_eAu   = nullptr, *jetcountsE3C_truth_eAu   = nullptr;
+	TH1I *jetcountsE2C_smeared_ep  = nullptr, *jetcountsE3C_smeared_ep  = nullptr;
+	TH1I *jetcountsE2C_smeared_eAu = nullptr, *jetcountsE3C_smeared_eAu = nullptr;
 
-    TH1I *jetcounts_truth_eAu = nullptr;
-	file_truth_eAu->GetObject("jetCounts",jetcounts_truth_eAu);
-	TH1I *jetcounts_smeared_eAu = nullptr;
-	file_smeared_eAu->GetObject("jetCounts",jetcounts_smeared_eAu);
+	file_truth_ep   ->GetObject("jetCounts_E2C", jetcountsE2C_truth_ep);
+	file_truth_ep   ->GetObject("jetCounts_E3C", jetcountsE3C_truth_ep);
+
+	file_truth_eAu  ->GetObject("jetCounts_E2C", jetcountsE2C_truth_eAu);
+	file_truth_eAu  ->GetObject("jetCounts_E3C", jetcountsE3C_truth_eAu);
+
+	file_smeared_ep ->GetObject("jetCounts_E2C", jetcountsE2C_smeared_ep);
+	file_smeared_ep ->GetObject("jetCounts_E3C", jetcountsE3C_smeared_ep);
+
+	file_smeared_eAu->GetObject("jetCounts_E2C", jetcountsE2C_smeared_eAu);
+	file_smeared_eAu->GetObject("jetCounts_E3C", jetcountsE3C_smeared_eAu);
+
 	
 
 	
@@ -103,14 +110,14 @@ void eA_EEC()
 		if (i>3){binwidth=binwidth_high;}
 
 
-        EEC_hist_truth_ep[i]->Scale(1. / (jetcounts_truth_ep->GetBinContent(i+1)),"width");
-        EEC_hist_truth_eAu[i]->Scale(1. / (jetcounts_truth_eAu->GetBinContent(i+1)),"width");
-		EEC_hist_smeared_ep[i]->Scale(1. / (jetcounts_smeared_ep->GetBinContent(i+1)),"width");
-        EEC_hist_smeared_eAu[i]->Scale(1. / (jetcounts_smeared_eAu->GetBinContent(i+1)),"width");
-		std::cout << jetcounts_truth_ep->GetBinContent(4) << std::endl;
-		std::cout << jetcounts_truth_eAu->GetBinContent(4) << std::endl;
-		std::cout << jetcounts_smeared_ep->GetBinContent(4) << std::endl;
-		std::cout << jetcounts_smeared_eAu->GetBinContent(4) << std::endl;
+        EEC_hist_truth_ep[i]->Scale(1. / (jetcountsE2C_truth_ep->GetBinContent(i+1)),"width");
+        EEC_hist_truth_eAu[i]->Scale(1. / (jetcountsE2C_truth_eAu->GetBinContent(i+1)),"width");
+		EEC_hist_smeared_ep[i]->Scale(1. / (jetcountsE2C_smeared_ep->GetBinContent(i+1)),"width");
+        EEC_hist_smeared_eAu[i]->Scale(1. / (jetcountsE2C_smeared_eAu->GetBinContent(i+1)),"width");
+		std::cout << jetcountsE2C_truth_ep->GetBinContent(4) << std::endl;
+		std::cout << jetcountsE2C_truth_eAu->GetBinContent(4) << std::endl;
+		std::cout << jetcountsE2C_smeared_ep->GetBinContent(4) << std::endl;
+		std::cout << jetcountsE2C_smeared_eAu->GetBinContent(4) << std::endl;
 		// EEC_hist_truth_ep[i]->Rebin(2);
 		// EEC_hist_truth_ep[i]->Scale(0.5);
 		EEC_hist_truth_ep[i]->GetXaxis()->SetLimits(0.05, 1);
@@ -140,7 +147,7 @@ void eA_EEC()
 
 		// EEC_hist_truth_eAu[i]->Draw("pe SAME"); // Draw the histogram
 
-		hsE2C->Add(EEC_hist_truth_ep[i]);
+		// hsE2C->Add(EEC_hist_truth_ep[i]);
 		hsE2C->Add(EEC_hist_truth_eAu[i]);
 		
 		// EEC_hist_truth_eAu[i]->GetXaxis()->SetTitle("#theta");
@@ -157,7 +164,7 @@ void eA_EEC()
 		EEC_hist_smeared_ep[i]->SetMarkerStyle(21);
 		EEC_hist_smeared_ep[i]->SetMarkerColor(kGreen);
 		// EEC_hist_smeared_ep[i]->Draw("pe"); // Draw the histogram
-		hsE2C->Add(EEC_hist_smeared_ep[i]);
+		// hsE2C->Add(EEC_hist_smeared_ep[i]);
 		hsE2C->Add(EEC_hist_smeared_eAu[i]);
 		// EEC_hist_smeared_ep[i]->GetXaxis()->SetTitle("#deltaR");
 		// EEC_hist_smeared_ep[i]->GetXaxis()->SetTitle("#theta");
@@ -189,7 +196,7 @@ void eA_EEC()
 		TLatex ptLabel;
 		ptLabel.SetNDC();
 		ptLabel.SetTextSize(0.04);
-		ptLabel.DrawLatex(0.2, 0.65, "5M events");
+		ptLabel.DrawLatex(0.2, 0.65, "400M/100M events");
 		ptLabel.DrawLatex(0.2, 0.6, "18x110 GeV beam");
 		ptLabel.DrawLatex(0.2, 0.55, " Q^{2}: 700-10000 GeV^{2}");
 		ptLabel.DrawLatex(0.2, 0.5, "GenShd=1");
@@ -202,9 +209,9 @@ void eA_EEC()
 		legendE2C->SetBorderSize(0); 
 		legendE2C->SetFillStyle(0);
 		legendE2C->SetTextSize(0.05);
-		legendE2C->AddEntry(EEC_hist_truth_ep[i], "truth_ep", "p");
+		// legendE2C->AddEntry(EEC_hist_truth_ep[i], "truth_ep", "p");
         legendE2C->AddEntry(EEC_hist_truth_eAu[i], "truth_eAu", "p");
-		legendE2C->AddEntry(EEC_hist_smeared_ep[i], "smeared_ep", "p");
+		// legendE2C->AddEntry(EEC_hist_smeared_ep[i], "smeared_ep", "p");
         legendE2C->AddEntry(EEC_hist_smeared_eAu[i], "smeared_eAu", "p");
 		
 
@@ -224,14 +231,14 @@ void eA_EEC()
 		if (i>3){binwidth=binwidth_high;}
 
 
-        E3C_hist_truth_ep[i]->Scale(1. / (jetcounts_truth_ep->GetBinContent(i+1)),"width");
-        E3C_hist_truth_eAu[i]->Scale(1. / (jetcounts_truth_eAu->GetBinContent(i+1)),"width");
-		E3C_hist_smeared_ep[i]->Scale(1. / (jetcounts_smeared_ep->GetBinContent(i+1)),"width");
-        E3C_hist_smeared_eAu[i]->Scale(1. / (jetcounts_smeared_eAu->GetBinContent(i+1)),"width");
-		std::cout << jetcounts_truth_ep->GetBinContent(4) << std::endl;
-		std::cout << jetcounts_truth_eAu->GetBinContent(4) << std::endl;
-		std::cout << jetcounts_smeared_ep->GetBinContent(4) << std::endl;
-		std::cout << jetcounts_smeared_eAu->GetBinContent(4) << std::endl;
+        E3C_hist_truth_ep[i]->Scale(1. / (jetcountsE3C_truth_ep->GetBinContent(i+1)),"width");
+        E3C_hist_truth_eAu[i]->Scale(1. / (jetcountsE3C_truth_eAu->GetBinContent(i+1)),"width");
+		E3C_hist_smeared_ep[i]->Scale(1. / (jetcountsE3C_smeared_ep->GetBinContent(i+1)),"width");
+        E3C_hist_smeared_eAu[i]->Scale(1. / (jetcountsE3C_smeared_eAu->GetBinContent(i+1)),"width");
+		std::cout << jetcountsE3C_truth_ep->GetBinContent(4) << std::endl;
+		std::cout << jetcountsE3C_truth_eAu->GetBinContent(4) << std::endl;
+		std::cout << jetcountsE3C_smeared_ep->GetBinContent(4) << std::endl;
+		std::cout << jetcountsE3C_smeared_eAu->GetBinContent(4) << std::endl;
 
 		E3C_hist_truth_ep[i]->GetXaxis()->SetLimits(0.05, 1);
 		// E3C_hist_truth_ep[i]->SetMaximum(1000.); // Set y-axis maximum/
@@ -295,7 +302,7 @@ void eA_EEC()
 
 		ptLabel.SetNDC();
 		ptLabel.SetTextSize(0.04);
-		ptLabel.DrawLatex(0.2, 0.65, "5M events");
+		ptLabel.DrawLatex(0.2, 0.65, "400M/100M events");
 		ptLabel.DrawLatex(0.2, 0.6, "18x110 GeV beam");
 		ptLabel.DrawLatex(0.2, 0.55, " Q^{2}: 700-10000 GeV^{2}");
 		ptLabel.DrawLatex(0.2, 0.5, "GenShd=1");
@@ -400,7 +407,7 @@ void eA_EEC()
 		legendRatio->Draw();
 
 		ptLabel.SetTextSize(0.03);
-		ptLabel.DrawLatex(0.15, 0.85, "5M events");
+		ptLabel.DrawLatex(0.15, 0.85, "400M/100M events");
 		ptLabel.DrawLatex(0.15, 0.8, "18x110 GeV beam");
 		ptLabel.DrawLatex(0.15, 0.75, " Q^{2}: 700-10000 GeV^{2}");
 		ptLabel.DrawLatex(0.15, 0.7, "GenShd=1");
